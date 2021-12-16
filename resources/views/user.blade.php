@@ -39,7 +39,7 @@
     <div class="flex items-center" style="width: 100%;">
         @foreach($photos as $photo)
             <div class="card" style="width: 18rem;">
-                <img class="" src="{{ asset('/storage/folder/'.$photo->photo_name)}}"  alt="IMAGE"/>
+                <img class="" src="{{ asset($photo->photo_path.$photo->photo_name)}}"  alt="IMAGE"/>
             </div>
         @endforeach
     </div>
