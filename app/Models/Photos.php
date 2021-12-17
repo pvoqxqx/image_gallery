@@ -5,6 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Class Photos
+ * @package App\Models
+ */
 class Photos extends Model
 {
     use HasFactory;
@@ -19,20 +23,4 @@ class Photos extends Model
         'photo_name',
         'photo_path',
     ];
-    /**
-     * @var int|mixed
-     */
-    private $owner_id;
-    /**
-     * @var mixed
-     */
-    private $photo_name;
-    /**
-     * @var mixed
-     */
-    private $photo_path;
-    /**
-     * @var mixed
-     */
-
 }

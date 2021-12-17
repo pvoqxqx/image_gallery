@@ -2,20 +2,28 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Photos;
 
+/**
+ * Class PhotosController
+ * @package App\Http\Controllers
+ */
 class PhotosController extends Controller
 {
-    public function upload(Request $request)
+    /**
+     * @param Request $request
+     * @return RedirectResponse
+     */
+    public function upload(Request $request): RedirectResponse
     {
-        // загрузка файла
-        if ($request->isMethod('post') && $request->file('userfile')) {
-
-            $file = $request->file('userfile');
+        $file = $request->file('userfile');
+        if ($request->isMethod('post') && $file) {
             $uploadFolder = 'public/images/';
             $fileName = $file->getClientOriginalName();
 
@@ -23,29 +31,43 @@ class PhotosController extends Controller
             $this->savePhotosPath($fileName);
         }
 
-        return Redirect::back()->with('message','Operation Successful!');
+        return Redirect::back()->with('message', 'Operation Successful!');
     }
 
-    public function showAllPhotos(int $id): ?\Illuminate\Support\Collection
+    /**
+     * @param int $id
+     * @return Collection|null
+     */
+    public function showAllPhotos(int $id): ?Collection
     {
-        if ($id) {
-            return DB::table('photos')
-                ->select('photo_name', 'photo_path')
-                ->where('owner_id', $id)
-                ->get();
-        } else return null;
-    }
-
-    private function savePhotosPath($fileName)
-    {
-        if ($fileName) {
-            $photo = new Photos;
-
-            $photo->owner_id = auth()->id();
-            $photo->photo_name = $fileName;
-            $photo->photo_path = 'storage/images/';
-
-            $photo->save();
+        if (!$id) {
+            return null;
         }
+
+        return DB::table('photos')
+            ->select('photo_name', 'photo_path')
+            ->where('owner_id', $id)
+            ->get();
+    }
+
+    /**
+     * @param $fileName
+     * @return void
+     */
+    private function savePhotosPath($fileName): void
+    {
+        if (!$fileName) {
+            return;
+        }
+
+        var_dump(auth()->id());
+
+        $photo = new Photos();
+
+        $photo->owner_id = auth()->id();
+        $photo->photo_name = $fileName;
+        $photo->photo_path = 'storage/images/';
+
+        $photo->save();
     }
 }

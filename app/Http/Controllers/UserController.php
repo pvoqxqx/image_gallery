@@ -2,11 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\DB;
 
+/**
+ * Class UserController
+ * @package App\Http\Controllers
+ */
 class UserController extends Controller
 {
+    /**
+     * @param int $id
+     * @return Application|Factory|View
+     */
     public function showUser(int $id)
     {
         $result = DB::table('users')
@@ -16,6 +26,6 @@ class UserController extends Controller
 
         $photos = (new PhotosController)->showAllPhotos($id);
 
-        return view('user', compact(['result', 'photos']));
+        return view('user', compact('result', 'photos'));
     }
 }
