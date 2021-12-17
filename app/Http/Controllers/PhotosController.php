@@ -60,8 +60,6 @@ class PhotosController extends Controller
             return;
         }
 
-        var_dump(auth()->id());
-
         $photo = new Photos();
 
         $photo->owner_id = auth()->id();

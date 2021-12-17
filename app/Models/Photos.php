@@ -8,6 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * Class Photos
  * @package App\Models
+ * @property int $owner_id
+ * @property string $photo_name
+ * @property string $photo_path
  */
 class Photos extends Model
 {
