@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Services\PhotosService;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -13,6 +14,17 @@ use Illuminate\Support\Facades\DB;
  */
 class UserController extends Controller
 {
+    private PhotosService $photosService;
+
+    /**
+     * @param PhotosService $photosService
+     */
+    public function __construct(
+        PhotosService $photosService
+    ) {
+        $this->photosService = $photosService;
+    }
+
     /**
      * @param int $id
      * @return Application|Factory|View
@@ -24,7 +36,7 @@ class UserController extends Controller
             ->where('id', $id)
             ->get();
 
-        $photos = (new PhotosController)->showAllPhotos($id);
+        $photos = $this->photosService->showAll($id);
 
         return view('user', compact('result', 'photos'));
     }
