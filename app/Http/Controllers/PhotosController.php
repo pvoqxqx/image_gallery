@@ -2,13 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Services\PhotosService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Storage;
-use App\Models\Photos;
 
 /**
  * Class PhotosController
@@ -16,6 +14,17 @@ use App\Models\Photos;
  */
 class PhotosController extends Controller
 {
+    private PhotosService $photosService;
+
+    /**
+     * @param PhotosService $photosService
+     */
+    public function __construct(
+        PhotosService $photosService
+    ) {
+        $this->photosService = $photosService;
+    }
+
     /**
      * @param Request $request
      * @return RedirectResponse
@@ -28,46 +37,9 @@ class PhotosController extends Controller
             $fileName = $file->getClientOriginalName();
 
             Storage::putFileAs($uploadFolder, $file, $fileName);
-            $this->savePhotosPath($fileName);
+            $this->photosService->save($fileName);
         }
 
         return Redirect::back()->with('message', 'Operation Successful!');
-    }
-
-    /**
-     * @param int $id
-     * @return Collection|null
-     */
-    public function showAllPhotos(int $id): ?Collection
-    {
-        if (!$id) {
-            return null;
-        }
-
-        return DB::table('photos')
-            ->select('photo_name', 'photo_path')
-            ->where('owner_id', $id)
-            ->get();
-    }
-
-    /**
-     * @param $fileName
-     * @return void
-     */
-    private function savePhotosPath($fileName): void
-    {
-        if (!$fileName) {
-            return;
-        }
-
-        var_dump(auth()->id());
-
-        $photo = new Photos();
-
-        $photo->owner_id = auth()->id();
-        $photo->photo_name = $fileName;
-        $photo->photo_path = 'storage/images/';
-
-        $photo->save();
     }
 }

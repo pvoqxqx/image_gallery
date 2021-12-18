@@ -19,5 +19,3 @@ Auth::routes();
 Route::get('/user/{id}', [App\Http\Controllers\UserController::class, 'showUser'])->name('user');
 Route::get('/', [App\Http\Controllers\UsersController::class, 'showAllUser'])->name('users');
 Route::post('/upload', [App\Http\Controllers\PhotosController::class, 'upload'])->name('upload');
-
-
